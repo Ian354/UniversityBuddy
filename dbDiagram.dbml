@@ -1,0 +1,292 @@
+// Enums
+Enum Role {
+  FUTURE_STUDENT
+  STUDENT
+  FORMER_STUDENT
+  MENTOR
+  ADMIN
+}
+
+Enum EventVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+Enum ErasmusDuration {
+  FULL_YEAR
+  FIRST_SEMESTER
+  SECOND_SEMESTER
+}
+
+Table User {
+  id int [pk, increment]
+  email varchar [unique, not null]
+  name varchar [not null]
+  password varchar [not null]
+  role Role [default: 'FUTURE_STUDENT']
+  universityId int [ref: > University.id]
+  erasmusUniversityId int [ref: > University.id]
+  erasmus boolean [default: false]
+  erasmusYear varchar
+  degree varchar
+  openToContact boolean [default: true]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'Core user model with authentication and profile information'
+}
+
+Table University {
+  id int [pk, increment]
+  name varchar [not null]
+  countryId int [ref: > Country.id, not null]
+  cityId int [ref: > City.id, not null]
+  isPublic boolean [not null]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'University information including location and type'
+}
+
+Table Country {
+  id int [pk, increment]
+  name varchar [unique, not null]
+  code varchar [unique, not null]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'Country master data with ISO codes'
+}
+
+Table City {
+  id int [pk, increment]
+  name varchar [not null]
+  countryId int [ref: > Country.id, not null]
+  latitude float
+  longitude float
+  northSouth varchar
+  eastWest varchar
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'City information with geographical coordinates'
+}
+
+Table Erasmus {
+  id int [pk, increment]
+  userId int [ref: > User.id, not null]
+  universityId int [ref: > University.id, not null]
+  status varchar [not null]
+  year varchar [not null]
+  academicYear varchar
+  duration ErasmusDuration
+  shareInfo boolean [default: true]
+  
+  Note: 'Erasmus exchange program records for students'
+}
+
+Table Review {
+  id int [pk, increment]
+  userId int [ref: > User.id, not null]
+  universityId int [ref: > University.id, not null]
+  rating int [not null]
+  overall int [not null]
+  installations int [not null]
+  uniLife int [not null]
+  accommodation int [not null]
+  academicLevel int [not null]
+  activities int [not null]
+  comment text
+  
+  Note: 'University reviews with multiple rating categories'
+}
+
+Table RatingAggregate {
+  id int [pk, increment]
+  universityId int [unique, ref: - University.id, not null]
+  reviewsCount int [default: 0]
+  overallAvg float [default: 0]
+  installationsAvg float [default: 0]
+  uniLifeAvg float [default: 0]
+  accommodationAvg float [default: 0]
+  academicLevelAvg float [default: 0]
+  activitiesAvg float [default: 0]
+  
+  Note: 'Aggregated rating statistics for universities'
+}
+
+Table Event {
+  id int [pk, increment]
+  title varchar [not null]
+  description text
+  start timestamp [not null]
+  end timestamp [not null]
+  location varchar
+  capacity int
+  visibility EventVisibility [default: 'PUBLIC']
+  mentorId int [ref: > User.id]
+  groupId int [ref: > MentorshipGroup.id]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'Events created by mentors for students'
+}
+
+Table EventAttendees {
+  userId int [ref: > User.id]
+  eventId int [ref: > Event.id]
+  
+  indexes {
+    (userId, eventId) [pk]
+  }
+  
+  Note: 'Many-to-many relationship between users and events'
+}
+
+Table MentorAvailability {
+  id int [pk, increment]
+  mentorId int [ref: > User.id, not null]
+  dayOfWeek int [not null]
+  startTime varchar [not null]
+  endTime varchar [not null]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  indexes {
+    (dayOfWeek, mentorId, startTime) [unique]
+  }
+  
+  Note: 'Mentor weekly availability schedule (0=Monday, 6=Sunday)'
+}
+
+Table StudentMentor {
+  id int [pk, increment]
+  studentId int [ref: > User.id, not null]
+  mentorId int [ref: > User.id, not null]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  indexes {
+    (studentId, mentorId) [unique]
+  }
+  
+  Note: 'Relationship between students and their mentors'
+}
+
+Table ForumTopic {
+  id int [pk, increment]
+  universityId int [ref: > University.id, not null]
+  title varchar [not null]
+  category varchar [not null]
+  isPinned boolean [default: false]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'Forum topics for university discussions'
+}
+
+Table ForumPost {
+  id int [pk, increment]
+  topicId int [ref: > ForumTopic.id, not null]
+  userId int [ref: > User.id, not null]
+  content text [not null]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'Posts/replies in university forum topics'
+}
+
+Table CityForumTopic {
+  id int [pk, increment]
+  cityId int [ref: > City.id, not null]
+  title varchar [not null]
+  category varchar [not null]
+  isPinned boolean [default: false]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'Forum topics for city-specific discussions'
+}
+
+Table CityForumPost {
+  id int [pk, increment]
+  topicId int [ref: > CityForumTopic.id, not null]
+  userId int [ref: > User.id, not null]
+  content text [not null]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'Posts/replies in city forum topics'
+}
+
+Table CountryForumTopic {
+  id int [pk, increment]
+  countryId int [ref: > Country.id, not null]
+  title varchar [not null]
+  category varchar [not null]
+  isPinned boolean [default: false]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'Forum topics for country-specific discussions'
+}
+
+Table CountryForumPost {
+  id int [pk, increment]
+  topicId int [ref: > CountryForumTopic.id, not null]
+  userId int [ref: > User.id, not null]
+  content text [not null]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'Posts/replies in country forum topics'
+}
+
+Table MentorGroupForumTopic {
+  id int [pk, increment]
+  mentorId int [ref: > User.id, not null]
+  title varchar [not null]
+  category varchar [not null]
+  isPinned boolean [default: false]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'Forum topics for mentorship groups'
+}
+
+Table MentorGroupForumPost {
+  id int [pk, increment]
+  topicId int [ref: > MentorGroupForumTopic.id, not null]
+  userId int [ref: > User.id, not null]
+  content text [not null]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'Posts/replies in mentorship group forum topics'
+}
+
+Table MentorshipGroup {
+  id int [pk, increment]
+  name varchar [not null]
+  description text
+  universityId int [ref: > University.id, not null]
+  mentorId int [ref: > User.id, not null]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  Note: 'Mentorship groups created by admins for universities'
+}
+
+Table MentorshipGroupMember {
+  id int [pk, increment]
+  groupId int [ref: > MentorshipGroup.id, not null]
+  userId int [ref: > User.id, not null]
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp [default: `now()`]
+  
+  indexes {
+    (groupId, userId) [unique]
+  }
+  
+  Note: 'Members of mentorship groups'
+}
