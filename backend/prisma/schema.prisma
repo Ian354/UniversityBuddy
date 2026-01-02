@@ -1,0 +1,332 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User roles
+enum Role {
+  FUTURE_STUDENT
+  STUDENT
+  FORMER_STUDENT
+  MENTOR
+  ADMIN
+}
+
+enum EventVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum ErasmusDuration {
+  FULL_YEAR
+  FIRST_SEMESTER
+  SECOND_SEMESTER
+}
+
+// User model
+model User {
+  id                  Int      @id @default(autoincrement())
+  email               String   @unique
+  name                String
+  password            String
+  role                Role     @default(FUTURE_STUDENT)
+  universityId        Int?
+  erasmusUniversityId Int?
+  erasmus             Boolean? @default(false)
+  erasmusYear         String?
+  degree              String?
+  openToContact       Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  university                 University?             @relation(fields: [universityId], references: [id])
+  erasmuses                  Erasmus[]
+  reviews                    Review[]
+  hostedEvents               Event[]                 @relation("host")
+  attending                  Event[]                 @relation("attendee")
+  mentorAvailability         MentorAvailability[]    @relation("mentorAvailability")
+  forumPosts                 ForumPost[]
+  cityForumPosts             CityForumPost[]
+  countryForumPosts          CountryForumPost[]
+  mentoring                  StudentMentor[]         @relation("studentMentorStudent")
+  mentoredBy                 StudentMentor[]         @relation("studentMentorMentor")
+  mentorGroupForumTopics     MentorGroupForumTopic[] @relation("mentorGroupForumTopics")
+  mentorGroupForumPosts      MentorGroupForumPost[]  @relation("mentorGroupForumPosts")
+  mentorshipGroupMemberships MentorshipGroupMember[]
+  mentoringGroups             MentorshipGroup[]       @relation("mentorshipGroupMentor")
+}
+
+// University model with id, name, country, city, isPublic, location, ratings, reviews
+model University {
+  id        Int      @id @default(autoincrement())
+  name      String
+  countryId Int
+  cityId    Int
+  isPublic  Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  country          Country           @relation(fields: [countryId], references: [id])
+  city             City              @relation(fields: [cityId], references: [id])
+  students         User[]
+  erasmuses        Erasmus[]
+  reviews          Review[]
+  ratings          RatingAggregate[]
+  forumTopics      ForumTopic[]
+  mentorshipGroups MentorshipGroup[]
+}
+
+model Country {
+  id           Int                 @id @default(autoincrement())
+  name         String              @unique
+  code         String              @unique // e.g., "ES" for Spain
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  cities       City[]
+  forumTopics  CountryForumTopic[]
+  universities University[]
+}
+
+model City {
+  id         Int      @id @default(autoincrement())
+  name       String
+  countryId  Int
+  latitude   Float?
+  longitude  Float?
+  northSouth String? // "N" for North, "S" for South
+  eastWest   String? // "E" for East, "W" for West
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  country      Country          @relation(fields: [countryId], references: [id])
+  forumTopics  CityForumTopic[]
+  universities University[]
+}
+
+// erasmus model with id, userId, universityId, status ("pasada", "presente", "futura", "ninguna"), course (e.g., "2023/2024")
+model Erasmus {
+  id           Int              @id @default(autoincrement())
+  userId       Int
+  universityId Int
+  status       String
+  year         String
+  academicYear String?
+  duration     ErasmusDuration?
+  shareInfo    Boolean          @default(true)
+
+  user       User       @relation(fields: [userId], references: [id])
+  university University @relation(fields: [universityId], references: [id])
+}
+
+// Review model with id, userId, universityId, rating (1-5), overall, installations, University life, accoommodation, academic level, activities
+model Review {
+  id            Int     @id @default(autoincrement())
+  userId        Int
+  universityId  Int
+  rating        Int
+  overall       Int
+  installations Int
+  uniLife       Int
+  accommodation Int
+  academicLevel Int
+  activities    Int
+  comment       String?
+
+  user       User       @relation(fields: [userId], references: [id])
+  university University @relation(fields: [universityId], references: [id])
+}
+
+// Rating Aggregate model to store average ratings for each university
+model RatingAggregate {
+  id               Int        @id @default(autoincrement())
+  university       University @relation(fields: [universityId], references: [id])
+  universityId     Int        @unique
+  reviewsCount     Int        @default(0)
+  overallAvg       Float      @default(0)
+  installationsAvg Float      @default(0)
+  uniLifeAvg       Float      @default(0)
+  accommodationAvg Float      @default(0)
+  academicLevelAvg Float      @default(0)
+  activitiesAvg    Float      @default(0)
+}
+
+// Event model
+model Event {
+  id          Int             @id @default(autoincrement())
+  title       String
+  description String?
+  start       DateTime
+  end         DateTime
+  location    String?
+  capacity    Int?
+  visibility  EventVisibility @default(PUBLIC)
+  mentor      User?           @relation("host", fields: [mentorId], references: [id])
+  mentorId    Int?
+  groupId     Int? // para grupo de mentoría
+  attendees   User[]          @relation("attendee")
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model MentorAvailability {
+  id        Int      @id @default(autoincrement())
+  mentorId  Int
+  dayOfWeek Int // 0=MMonday, 1=Tuesday, ..., 6=Sunday
+  startTime String // Format: "HH:MM"
+  endTime   String // Format: "HH:MM"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  mentor    User     @relation("mentorAvailability", fields: [mentorId], references: [id])
+
+  @@unique([dayOfWeek, mentorId, startTime]) // Prevent overlapping time slots for same mentor/day
+}
+
+model StudentMentor {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  mentorId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student User @relation("studentMentorStudent", fields: [studentId], references: [id])
+  mentor  User @relation("studentMentorMentor", fields: [mentorId], references: [id])
+
+  @@unique([studentId, mentorId]) // Prevent duplicate student-mentor pairs
+}
+
+model ForumTopic {
+  id           Int      @id @default(autoincrement())
+  universityId Int
+  title        String
+  category     String // e.g., "Accommodation", "Student Life", "Academics", "General"
+  isPinned     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  university University  @relation(fields: [universityId], references: [id])
+  posts      ForumPost[]
+}
+
+// Forum Post model for replies in topics
+model ForumPost {
+  id        Int      @id @default(autoincrement())
+  topicId   Int
+  userId    Int
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  topic ForumTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  user  User       @relation(fields: [userId], references: [id])
+}
+
+model CityForumTopic {
+  id        Int             @id @default(autoincrement())
+  cityId    Int
+  title     String
+  category  String // e.g., "Accommodation", "Transportation", "Survival Tips", "General"
+  isPinned  Boolean         @default(false)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  city      City            @relation(fields: [cityId], references: [id])
+  posts     CityForumPost[]
+}
+
+// Forum posts for city topics
+model CityForumPost {
+  id        Int            @id @default(autoincrement())
+  topicId   Int
+  userId    Int
+  content   String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  topic     CityForumTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  user      User           @relation(fields: [userId], references: [id])
+}
+
+model CountryForumTopic {
+  id        Int                @id @default(autoincrement())
+  countryId Int
+  title     String
+  category  String // e.g., "Visa", "Cultural Tips", "General"
+  isPinned  Boolean            @default(false)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  country   Country            @relation(fields: [countryId], references: [id])
+  posts     CountryForumPost[]
+}
+
+model CountryForumPost {
+  id        Int               @id @default(autoincrement())
+  topicId   Int
+  userId    Int
+  content   String
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  topic     CountryForumTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  user      User              @relation(fields: [userId], references: [id])
+}
+
+// Mentorship Group Forum Topic model
+model MentorGroupForumTopic {
+  id        Int                    @id @default(autoincrement())
+  mentorId  Int // The mentor who owns this group
+  title     String
+  category  String // e.g., "General", "Announcements", "Q&A", "Resources"
+  isPinned  Boolean                @default(false)
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+  mentor    User                   @relation("mentorGroupForumTopics", fields: [mentorId], references: [id])
+  posts     MentorGroupForumPost[]
+}
+
+// Mentorship Group Forum Post model
+model MentorGroupForumPost {
+  id        Int                   @id @default(autoincrement())
+  topicId   Int
+  userId    Int
+  content   String
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+  topic     MentorGroupForumTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  user      User                  @relation("mentorGroupForumPosts", fields: [userId], references: [id])
+}
+
+// Mentorship Group model - groups created by admins for their university
+model MentorshipGroup {
+  id           Int      @id @default(autoincrement())
+  name         String
+  description  String?
+  universityId Int
+  mentorId     Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  university University              @relation(fields: [universityId], references: [id])
+  mentor     User                     @relation("mentorshipGroupMentor", fields: [mentorId], references: [id])
+  members    MentorshipGroupMember[]
+}
+
+// Mentorship Group Member - associates users with mentorship groups
+model MentorshipGroupMember {
+  id        Int      @id @default(autoincrement())
+  groupId   Int
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  group MentorshipGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User            @relation(fields: [userId], references: [id])
+
+  @@unique([groupId, userId]) // Prevent duplicate memberships
+}

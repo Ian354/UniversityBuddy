@@ -1,0 +1,1721 @@
+{
+	"info": {
+		"_postman_id": "tfg-backend-collection",
+		"name": "TFG Backend API",
+		"description": "Complete API collection for testing the TFG Backend. This collection covers all endpoints for user management, universities, cities, countries, erasmus programs, events, reviews, forums, mentor availability, student-mentor relationships, and mentorship groups.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"description": "Authentication endpoints for user registration, login, and profile management",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"testuser@example.com\",\n    \"name\": \"Test User\",\n    \"password\": \"securePassword123\",\n    \"role\": \"STUDENT\",\n    \"university\": 1,\n    \"degree\": \"Computer Science\",\n    \"openToContact\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "register"]
+						},
+						"description": "Register a new user. Required fields: email, name, password. Optional: role (STUDENT, MENTOR, FUTURE_STUDENT, FORMER_STUDENT, ADMIN), university, erasmus, degree, openToContact"
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"authToken\", jsonData.token);",
+									"}",
+									"if (jsonData.user && jsonData.user.id) {",
+									"    pm.environment.set(\"userId\", jsonData.user.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"securePassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "login"]
+						},
+						"description": "Login with email and password. Returns JWT token which is automatically saved to authToken environment variable."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/auth/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "profile"]
+						},
+						"description": "Get current authenticated user's profile. Requires valid JWT token."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"description": "User management endpoints",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["users"]
+						},
+						"description": "Retrieve all users from the database"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["users", "{{userId}}"]
+						},
+						"description": "Retrieve a specific user by their ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users by University",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/university/{{universityId}}?role=STUDENT",
+							"host": ["{{baseUrl}}"],
+							"path": ["users", "university", "{{universityId}}"],
+							"query": [
+								{
+									"key": "role",
+									"value": "STUDENT",
+									"description": "Optional: Filter by role (STUDENT, MENTOR, FUTURE_STUDENT, FORMER_STUDENT, ADMIN)"
+								}
+							]
+						},
+						"description": "Retrieve all users from a specific university. Optional role filter."
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"newuser@example.com\",\n    \"name\": \"New User\",\n    \"password\": \"password123\",\n    \"role\": \"STUDENT\",\n    \"universityId\": 1,\n    \"degree\": \"Engineering\",\n    \"openToContact\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["users"]
+						},
+						"description": "Create a new user. Required: email, name, password, role. Optional: universityId, erasmusUniversityId, erasmusYear, degree, openToContact"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"updated@example.com\",\n    \"degree\": \"Updated Degree\",\n    \"openToContact\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["users", "{{userId}}"]
+						},
+						"description": "Update an existing user by ID. All fields are optional."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["users", "{{userId}}"]
+						},
+						"description": "Delete a user by ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Universities",
+			"description": "University management endpoints",
+			"item": [
+				{
+					"name": "Get All Universities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/university",
+							"host": ["{{baseUrl}}"],
+							"path": ["university"]
+						},
+						"description": "Retrieve all universities"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Universities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/university/search?name=University&countryId={{countryId}}&cityId={{cityId}}&minOverall=3&maxOverall=5",
+							"host": ["{{baseUrl}}"],
+							"path": ["university", "search"],
+							"query": [
+								{
+									"key": "name",
+									"value": "University",
+									"description": "Search by name (partial match)"
+								},
+								{
+									"key": "countryId",
+									"value": "{{countryId}}",
+									"description": "Filter by country ID"
+								},
+								{
+									"key": "cityId",
+									"value": "{{cityId}}",
+									"description": "Filter by city ID"
+								},
+								{
+									"key": "minOverall",
+									"value": "3",
+									"description": "Minimum overall rating"
+								},
+								{
+									"key": "maxOverall",
+									"value": "5",
+									"description": "Maximum overall rating"
+								}
+							]
+						},
+						"description": "Search universities by name, country, city, and rating filters. All parameters are optional."
+					},
+					"response": []
+				},
+				{
+					"name": "Get University by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/university/{{universityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["university", "{{universityId}}"]
+						},
+						"description": "Retrieve a specific university by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Create University",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"New University\",\n    \"countryId\": 1,\n    \"cityId\": 1,\n    \"isPublic\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/university",
+							"host": ["{{baseUrl}}"],
+							"path": ["university"]
+						},
+						"description": "Create a new university. Required: name, countryId, cityId, isPublic"
+					},
+					"response": []
+				},
+				{
+					"name": "Update University",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated University Name\",\n    \"isPublic\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/university/{{universityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["university", "{{universityId}}"]
+						},
+						"description": "Update an existing university by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete University",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/university/{{universityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["university", "{{universityId}}"]
+						},
+						"description": "Delete a university by ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cities",
+			"description": "City management endpoints",
+			"item": [
+				{
+					"name": "Get All Cities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/city",
+							"host": ["{{baseUrl}}"],
+							"path": ["city"]
+						},
+						"description": "Retrieve all cities ordered by name"
+					},
+					"response": []
+				},
+				{
+					"name": "Search City",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/city/search?name=Madrid&countryId={{countryId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["city", "search"],
+							"query": [
+								{
+									"key": "name",
+									"value": "Madrid",
+									"description": "City name (required)"
+								},
+								{
+									"key": "countryId",
+									"value": "{{countryId}}",
+									"description": "Country ID (required)"
+								}
+							]
+						},
+						"description": "Search for a city by exact name and country ID. Both parameters are required."
+					},
+					"response": []
+				},
+				{
+					"name": "Get City by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/city/{{cityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["city", "{{cityId}}"]
+						},
+						"description": "Retrieve a specific city by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Get City Universities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/city/{{cityId}}/universities",
+							"host": ["{{baseUrl}}"],
+							"path": ["city", "{{cityId}}", "universities"]
+						},
+						"description": "Retrieve all universities in a specific city"
+					},
+					"response": []
+				},
+				{
+					"name": "Create City",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"New City\",\n    \"countryId\": 1,\n    \"latitude\": 40.4168,\n    \"longitude\": -3.7038,\n    \"northSouth\": \"N\",\n    \"eastWest\": \"W\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/city",
+							"host": ["{{baseUrl}}"],
+							"path": ["city"]
+						},
+						"description": "Create a new city. Required: name, countryId. Optional: latitude, longitude, northSouth, eastWest"
+					},
+					"response": []
+				},
+				{
+					"name": "Update City",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated City Name\",\n    \"latitude\": 41.3851\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/city/{{cityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["city", "{{cityId}}"]
+						},
+						"description": "Update an existing city by ID. All fields are optional."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete City",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/city/{{cityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["city", "{{cityId}}"]
+						},
+						"description": "Delete a city by ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Countries",
+			"description": "Country management endpoints",
+			"item": [
+				{
+					"name": "Get All Countries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/country",
+							"host": ["{{baseUrl}}"],
+							"path": ["country"]
+						},
+						"description": "Retrieve all countries ordered by name"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Country",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/country/search?name=Spain&country=Spain",
+							"host": ["{{baseUrl}}"],
+							"path": ["country", "search"],
+							"query": [
+								{
+									"key": "name",
+									"value": "Spain",
+									"description": "Country name (required)"
+								},
+								{
+									"key": "country",
+									"value": "Spain",
+									"description": "Country (required)"
+								}
+							]
+						},
+						"description": "Search for a country by name. Both name and country parameters are required."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Country by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/country/{{countryId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["country", "{{countryId}}"]
+						},
+						"description": "Retrieve a specific country by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Country Cities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/country/{{countryId}}/cities",
+							"host": ["{{baseUrl}}"],
+							"path": ["country", "{{countryId}}", "cities"]
+						},
+						"description": "Retrieve all cities in a specific country"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Country",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"New Country\",\n    \"code\": \"NC\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/country",
+							"host": ["{{baseUrl}}"],
+							"path": ["country"]
+						},
+						"description": "Create a new country. Required: name, code"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Country",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Country Name\",\n    \"code\": \"UC\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/country/{{countryId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["country", "{{countryId}}"]
+						},
+						"description": "Update an existing country by ID. All fields are optional."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Country",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/country/{{countryId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["country", "{{countryId}}"]
+						},
+						"description": "Delete a country by ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Erasmus",
+			"description": "Erasmus assignment management endpoints",
+			"item": [
+				{
+					"name": "Get Erasmus by User ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/erasmus/user/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["erasmus", "user", "{{userId}}"]
+						},
+						"description": "Retrieve all erasmus assignments for a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Erasmus by University ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/erasmus/university/{{universityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["erasmus", "university", "{{universityId}}"]
+						},
+						"description": "Retrieve all erasmus assignments for a specific university"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Erasmus Contacts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/erasmus/contacts?universityId={{universityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["erasmus", "contacts"],
+							"query": [
+								{
+									"key": "universityId",
+									"value": "{{universityId}}",
+									"description": "University ID (required)"
+								}
+							]
+						},
+						"description": "Get erasmus contacts for a specific university. Returns users who have shareInfo=true and openToContact=true"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Erasmus Assignment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 1,\n    \"universityId\": 1,\n    \"status\": \"ACTIVE\",\n    \"year\": 2024,\n    \"academicYear\": \"2024/2025\",\n    \"duration\": \"FULL_YEAR\",\n    \"shareInfo\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/erasmus",
+							"host": ["{{baseUrl}}"],
+							"path": ["erasmus"]
+						},
+						"description": "Create a new erasmus assignment. Required: userId, universityId, status, year. Optional: academicYear, duration, shareInfo"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Erasmus Assignment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"COMPLETED\",\n    \"shareInfo\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/erasmus/{{erasmusId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["erasmus", "{{erasmusId}}"]
+						},
+						"description": "Update an existing erasmus assignment by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Erasmus Assignment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/erasmus/{{erasmusId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["erasmus", "{{erasmusId}}"]
+						},
+						"description": "Delete an erasmus assignment by ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"description": "Event management endpoints",
+			"item": [
+				{
+					"name": "Get All Events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/event?mentorId={{mentorId}}&userId={{userId}}&upcoming=true",
+							"host": ["{{baseUrl}}"],
+							"path": ["event"],
+							"query": [
+								{
+									"key": "mentorId",
+									"value": "{{mentorId}}",
+									"description": "Filter by mentor ID (optional)"
+								},
+								{
+									"key": "userId",
+									"value": "{{userId}}",
+									"description": "Filter by attendee user ID (optional)"
+								},
+								{
+									"key": "upcoming",
+									"value": "true",
+									"description": "Filter upcoming events only (optional)"
+								}
+							]
+						},
+						"description": "Retrieve all events with optional filters for mentor, user attendance, and upcoming status"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Available Events for User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/event/available/{{userId}}?upcoming=true",
+							"host": ["{{baseUrl}}"],
+							"path": ["event", "available", "{{userId}}"],
+							"query": [
+								{
+									"key": "upcoming",
+									"value": "true",
+									"description": "Filter upcoming events only (optional)"
+								}
+							]
+						},
+						"description": "Get events available for a specific user based on their university and mentor relationships"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Event by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/event/{{eventId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["event", "{{eventId}}"]
+						},
+						"description": "Retrieve a specific event by ID with mentor and attendee information"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Event Attendees",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/event/{{eventId}}/attendees",
+							"host": ["{{baseUrl}}"],
+							"path": ["event", "{{eventId}}", "attendees"]
+						},
+						"description": "Retrieve all attendees for a specific event"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Welcome Event\",\n    \"description\": \"A welcome event for new erasmus students\",\n    \"start\": \"2024-09-15T10:00:00Z\",\n    \"end\": \"2024-09-15T12:00:00Z\",\n    \"location\": \"Main Campus Hall\",\n    \"capacity\": 50,\n    \"mentorId\": 1,\n    \"visibility\": \"PUBLIC\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/event",
+							"host": ["{{baseUrl}}"],
+							"path": ["event"]
+						},
+						"description": "Create a new event. Required: title, start, end, location, capacity. Optional: description, mentorId, groupId, visibility (PUBLIC/PRIVATE)"
+					},
+					"response": []
+				},
+				{
+					"name": "Attend Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/event/{{eventId}}/attend",
+							"host": ["{{baseUrl}}"],
+							"path": ["event", "{{eventId}}", "attend"]
+						},
+						"description": "Add a user as attendee to an event"
+					},
+					"response": []
+				},
+				{
+					"name": "Unattend Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/event/{{eventId}}/unattend",
+							"host": ["{{baseUrl}}"],
+							"path": ["event", "{{eventId}}", "unattend"]
+						},
+						"description": "Remove a user from event attendees"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reviews",
+			"description": "University review management endpoints",
+			"item": [
+				{
+					"name": "Get Reviews by University",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/review/university/{{universityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["review", "university", "{{universityId}}"]
+						},
+						"description": "Retrieve all reviews for a specific university"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Reviews by User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/review/user/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["review", "user", "{{userId}}"]
+						},
+						"description": "Retrieve all reviews written by a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get University Rating Averages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/review/university/{{universityId}}/averages",
+							"host": ["{{baseUrl}}"],
+							"path": ["review", "university", "{{universityId}}", "averages"]
+						},
+						"description": "Get the average ratings for a specific university across all categories"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Review",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 1,\n    \"universityId\": 1,\n    \"rating\": 4,\n    \"overall\": 4,\n    \"installations\": 5,\n    \"uniLife\": 4,\n    \"accommodation\": 3,\n    \"academicLevel\": 4,\n    \"activities\": 5,\n    \"comment\": \"Great experience overall! The campus facilities are excellent and there are plenty of activities.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/review",
+							"host": ["{{baseUrl}}"],
+							"path": ["review"]
+						},
+						"description": "Create a new review for a university. Required: userId, universityId, rating, overall, installations, uniLife, accommodation, academicLevel, activities. Optional: comment"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Review",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/review/{{reviewId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["review", "{{reviewId}}"]
+						},
+						"description": "Delete a review by ID. This also updates the university's rating aggregates."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "University Forum",
+			"description": "University forum endpoints for topics and posts",
+			"item": [
+				{
+					"name": "Get Topics by University",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/forum/university/{{universityId}}/topics",
+							"host": ["{{baseUrl}}"],
+							"path": ["forum", "university", "{{universityId}}", "topics"]
+						},
+						"description": "Retrieve all forum topics for a specific university"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Topic with Posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/forum/topic/{{topicId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["forum", "topic", "{{topicId}}"]
+						},
+						"description": "Retrieve a specific topic with all its posts"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Topic",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Best places to eat near campus\",\n    \"category\": \"TIPS\",\n    \"initialPost\": \"Hey everyone! I'm looking for good restaurant recommendations near the campus. What are your favorite spots?\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/forum/university/{{universityId}}/topics",
+							"host": ["{{baseUrl}}"],
+							"path": ["forum", "university", "{{universityId}}", "topics"]
+						},
+						"description": "Create a new forum topic for a university. Requires authentication. Required: title, category, initialPost"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Post in Topic",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"I recommend trying the Italian restaurant on Main Street. They have great pasta and reasonable prices!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/forum/topic/{{topicId}}/posts",
+							"host": ["{{baseUrl}}"],
+							"path": ["forum", "topic", "{{topicId}}", "posts"]
+						},
+						"description": "Create a new post in a forum topic. Requires authentication. Required: content"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "City Forum",
+			"description": "City forum endpoints for topics and posts",
+			"item": [
+				{
+					"name": "Get Topics by City",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cityForum/city/{{cityId}}/topics",
+							"host": ["{{baseUrl}}"],
+							"path": ["cityForum", "city", "{{cityId}}", "topics"]
+						},
+						"description": "Retrieve all forum topics for a specific city"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Topic with Posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cityForum/topic/{{topicId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["cityForum", "topic", "{{topicId}}"]
+						},
+						"description": "Retrieve a specific city forum topic with all its posts"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Topic",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Public transportation tips\",\n    \"category\": \"TRANSPORT\",\n    \"initialPost\": \"What's the best way to get around the city? Any tips for monthly passes?\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cityForum/city/{{cityId}}/topics",
+							"host": ["{{baseUrl}}"],
+							"path": ["cityForum", "city", "{{cityId}}", "topics"]
+						},
+						"description": "Create a new forum topic for a city. Requires authentication. Required: title, category, initialPost"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Post in Topic",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Get the student monthly pass - it's much cheaper! You can get it at any metro station.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cityForum/topic/{{topicId}}/posts",
+							"host": ["{{baseUrl}}"],
+							"path": ["cityForum", "topic", "{{topicId}}", "posts"]
+						},
+						"description": "Create a new post in a city forum topic. Requires authentication. Required: content"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Country Forum",
+			"description": "Country forum endpoints for topics and posts",
+			"item": [
+				{
+					"name": "Get Topics by Country",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/countryForum/country/{{countryId}}/topics",
+							"host": ["{{baseUrl}}"],
+							"path": ["countryForum", "country", "{{countryId}}", "topics"]
+						},
+						"description": "Retrieve all forum topics for a specific country"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Topic with Posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/countryForum/topic/{{topicId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["countryForum", "topic", "{{topicId}}"]
+						},
+						"description": "Retrieve a specific country forum topic with all its posts"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Topic",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Visa requirements for EU students\",\n    \"category\": \"DOCUMENTS\",\n    \"initialPost\": \"Can someone explain the visa process? I'm from outside the EU and need guidance.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/countryForum/country/{{countryId}}/topics",
+							"host": ["{{baseUrl}}"],
+							"path": ["countryForum", "country", "{{countryId}}", "topics"]
+						},
+						"description": "Create a new forum topic for a country. Requires authentication. Required: title, category, initialPost"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Post in Topic",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"You'll need to apply for a student visa at the embassy. Make sure to have your acceptance letter ready!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/countryForum/topic/{{topicId}}/posts",
+							"host": ["{{baseUrl}}"],
+							"path": ["countryForum", "topic", "{{topicId}}", "posts"]
+						},
+						"description": "Create a new post in a country forum topic. Requires authentication. Required: content"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Mentor Availability",
+			"description": "Mentor availability slot management endpoints",
+			"item": [
+				{
+					"name": "Get Mentor Availability",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/mentorAvailability/mentor/{{mentorId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorAvailability", "mentor", "{{mentorId}}"]
+						},
+						"description": "Retrieve all availability slots for a specific mentor"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Mentor Weekly Availability",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/mentorAvailability/mentor/{{mentorId}}/week",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorAvailability", "mentor", "{{mentorId}}", "week"]
+						},
+						"description": "Get mentor's availability organized by day of week"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Availability Slot by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/mentorAvailability/{{availabilityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorAvailability", "{{availabilityId}}"]
+						},
+						"description": "Retrieve a specific availability slot by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Availability Slot",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mentorId\": 1,\n    \"dayOfWeek\": 1,\n    \"startTime\": \"09:00\",\n    \"endTime\": \"11:00\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/mentorAvailability",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorAvailability"]
+						},
+						"description": "Create a new availability slot for a mentor. Required: mentorId, dayOfWeek (0=Sunday to 6=Saturday), startTime (HH:MM), endTime (HH:MM). The user must have MENTOR role."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Availability Slot",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dayOfWeek\": 2,\n    \"startTime\": \"10:00\",\n    \"endTime\": \"12:00\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/mentorAvailability/{{availabilityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorAvailability", "{{availabilityId}}"]
+						},
+						"description": "Update an existing availability slot. All fields are optional."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Availability Slot",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/mentorAvailability/{{availabilityId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorAvailability", "{{availabilityId}}"]
+						},
+						"description": "Delete an availability slot by ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Student Mentor",
+			"description": "Student-mentor relationship management endpoints",
+			"item": [
+				{
+					"name": "Get Student-Mentor Relationships",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/studentMentor?studentId={{userId}}&mentorId={{mentorId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["studentMentor"],
+							"query": [
+								{
+									"key": "studentId",
+									"value": "{{userId}}",
+									"description": "Filter by student ID (optional)"
+								},
+								{
+									"key": "mentorId",
+									"value": "{{mentorId}}",
+									"description": "Filter by mentor ID (optional)"
+								}
+							]
+						},
+						"description": "Retrieve all student-mentor relationships with optional filters"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Student-Mentor Relationship",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"studentId\": 2,\n    \"mentorId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/studentMentor",
+							"host": ["{{baseUrl}}"],
+							"path": ["studentMentor"]
+						},
+						"description": "Create a new student-mentor relationship. Required: studentId, mentorId. The mentor must have MENTOR role."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Student-Mentor Relationship",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/studentMentor/{{studentMentorId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["studentMentor", "{{studentMentorId}}"]
+						},
+						"description": "Delete a student-mentor relationship by ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Mentor Group Forum",
+			"description": "Private mentor group forum endpoints (requires authentication and group membership)",
+			"item": [
+				{
+					"name": "Get Topics by Mentor",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/mentorGroupForum/mentor/{{mentorId}}/topics",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorGroupForum", "mentor", "{{mentorId}}", "topics"]
+						},
+						"description": "Retrieve all forum topics for a mentor's group. Requires authentication and user must be part of the mentor's group."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Topic with Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/mentorGroupForum/topic/{{topicId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorGroupForum", "topic", "{{topicId}}"]
+						},
+						"description": "Retrieve a specific mentor group topic with all its posts. Requires authentication and group membership."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Topic",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Group meeting schedule\",\n    \"category\": \"ANNOUNCEMENTS\",\n    \"initialPost\": \"Hi everyone! Let's discuss our weekly meeting schedule. What times work best for everyone?\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/mentorGroupForum/mentor/{{mentorId}}/topics",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorGroupForum", "mentor", "{{mentorId}}", "topics"]
+						},
+						"description": "Create a new topic in a mentor's group forum. Requires authentication and group membership. Required: title, category, initialPost"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Post in Topic",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Tuesdays at 3pm works great for me!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/mentorGroupForum/topic/{{topicId}}/posts",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorGroupForum", "topic", "{{topicId}}", "posts"]
+						},
+						"description": "Create a new post in a mentor group topic. Requires authentication and group membership. Required: content"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Mentorship Group",
+			"description": "Mentorship group management endpoints (requires ADMIN role)",
+			"item": [
+				{
+					"name": "Get All Mentorship Groups",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/mentorshipGroup",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorshipGroup"]
+						},
+						"description": "Retrieve all mentorship groups for the admin's university. Requires ADMIN role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Mentorship Group by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/mentorshipGroup/{{groupId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorshipGroup", "{{groupId}}"]
+						},
+						"description": "Retrieve a specific mentorship group with members. Requires ADMIN role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get University Students",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/mentorshipGroup/university/students",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorshipGroup", "university", "students"]
+						},
+						"description": "Get all students in the admin's university for assigning to groups. Requires ADMIN role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Admin Dashboard Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/mentorshipGroup/admin/stats",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorshipGroup", "admin", "stats"]
+						},
+						"description": "Get admin dashboard statistics including total students, groups, and membership counts. Requires ADMIN role."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Mentorship Group",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Engineering Students Group\",\n    \"description\": \"Mentorship group for engineering faculty students\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/mentorshipGroup",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorshipGroup"]
+						},
+						"description": "Create a new mentorship group. Requires ADMIN role. Required: name. Optional: description"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Mentorship Group",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Group Name\",\n    \"description\": \"Updated description\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/mentorshipGroup/{{groupId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorshipGroup", "{{groupId}}"]
+						},
+						"description": "Update an existing mentorship group. Requires ADMIN role. All fields are optional."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Mentorship Group",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/mentorshipGroup/{{groupId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorshipGroup", "{{groupId}}"]
+						},
+						"description": "Delete a mentorship group. Requires ADMIN role."
+					},
+					"response": []
+				},
+				{
+					"name": "Add Member to Group",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/mentorshipGroup/{{groupId}}/members",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorshipGroup", "{{groupId}}", "members"]
+						},
+						"description": "Add a user as member to a mentorship group. Requires ADMIN role. User must belong to the same university."
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Member from Group",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/mentorshipGroup/{{groupId}}/members/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["mentorshipGroup", "{{groupId}}", "members", "{{userId}}"]
+						},
+						"description": "Remove a user from a mentorship group. Requires ADMIN role."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

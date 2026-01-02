@@ -1,0 +1,302 @@
+﻿name,country,city,public
+ETH Zurich - Swiss Federal Institute of Technology,Switzerland,Zurich,yes
+Imperial College London,United Kingdom,London,yes
+University of Oxford,United Kingdom,Oxford,yes
+University of Cambridge,United Kingdom,Cambridge,yes
+UCL,United Kingdom,London,yes
+The University of Edinburgh,United Kingdom,Edinburgh,yes
+The University of Manchester,United Kingdom,Manchester,yes
+King's College London,United Kingdom,London,yes
+Université PSL,France,Paris,
+EPFL,Switzerland,Laussane,yes
+Technical University of Munich,Germany,Munich,yes
+The London School of Economics and Political Science (LSE),United Kingdom,London,yes
+Lund University,Sweden,Lund,yes
+University of Bristol,United Kingdom,Bristol,yes
+Delft University of Technology,Netherlands,Delft,yes
+University of Glasgow,United Kingdom,Glasgow,yes
+University of Amsterdam,Netherlands,Amsterdam,yes
+Ruprecht-Karls-Universität Heidelberg,Germany,Heidelberg,yes
+University of Birmingham,United Kingdom,Birmingham,yes
+University of Leeds,United Kingdom,Leeds,yes
+Ludwig-Maximilians-Universität München,Germany,Munich,yes
+The University of Warwick,United Kingdom,Warwick,yes
+Institut Polytechnique de Paris,France,Paris,yes
+University of Nottingham,United Kingdom,Nottingham,yes
+Uppsala University,Sweden,Uppsala,yes
+Trinity College Dublin, The University of Dublin,Ireland,yes
+KTH Royal Institute of Technology ,Sweden,Stockholm,yes
+KU Leuven,Belgium,Leuven,yes
+The University of Sheffield,United Kingdom,Sheffield,yes
+Université Paris-Saclay,France,Paris,yes
+Sorbonne University,France,Paris,yes
+Durham University,United Kingdom,Durham,yes
+University of Copenhagen,Denmark,Copenhagen,yes
+University of Southampton,United Kingdom,Southampton,yes
+Newcastle University,United Kingdom,Newcastle,yes
+University of Zurich,Switzerland,Zurich,yes
+University of St Andrews,United Kingdom,St Andrews,yes
+Politecnico di Milano,Italy,Milan,yes
+Queen Mary University of London,United Kingdom,London,yes
+Utrecht University,Netherlands,Utrecht,yes
+Aalto University,Finland,Espoo,yes
+University of Vienna,Austria,Vienna,yes
+Freie Universitaet Berlin,Germany,Berlin,yes
+Stockholm University,Sweden,Stockholm,yes
+Technische Universität Berlin (TU Berlin),Germany,Berlin,yes
+University of Helsinki,Finland,Helsinki,yes
+Ghent University,Belgium,Ghent,yes
+Alma Mater Studiorum - University of Bologna,Italy,Bologna,yes
+The University of Exeter,United Kingdom,Exeter,yes
+University of Liverpool,United Kingdom,Liverpool,yes
+University College Dublin,Ireland,Dublin,yes
+Leiden University,Netherlands,Leiden,yes
+Aarhus University,Denmark,Aarhus,yes
+Universitat de Barcelona,Spain,Barcelona,yes
+University of Geneva,Switzerland,Geneva,yes
+University of Groningen,Netherlands,Groningen,yes
+Wageningen University & Research,Netherlands,Wagenigen,yes
+RWTH Aachen University,Germany,Aachen,yes
+"KIT, Karlsruhe Institute of Technology",Germany,Karlsruhe,yes
+Cardiff University,United Kingdom,Cardiff,yes
+Complutense University of Madrid,Spain,Madrid,yes
+University of Bath,United Kingdom,Bath,yes
+Lancaster University,United Kingdom,Lancaster,yes
+University of Oslo,Norway,Oslo,yes
+Erasmus University Rotterdam ,Netherlands,Rotterdam,yes
+Sapienza University of Rome,Italy,Rome,yes
+Universitat Autònoma de Barcelona,Spain,Barcelona,yes
+Humboldt-Universität zu Berlin,Germany,Berlin,yes
+Technical University of Denmark,Denmark,Denmark,yes
+University of York,United Kingdom,York,yes
+University of Gothenburg,Sweden,Gothenburg,yes
+Universidad Autónoma de Madrid,Spain,Madrid,yes
+Queen's University Belfast,United Kingdom,Belfast,yes
+University of Reading,United Kingdom,Reading,yes
+Université catholique de Louvain (UCLouvain),Belgium,Louvain,
+Albert-Ludwigs-Universitaet Freiburg,Germany,Freiburg,yes
+Rheinische Friedrich-Wilhelms-Universität Bonn,Germany,Bonn,yes
+Chalmers University of Technology,Sweden,Gothenburg,yes
+Charles University,Czech Republic,Prague,yes
+University of Basel,Switzerland,Basel,yes
+Universität Hamburg,Germany,Hamburg,yes
+University of Göttingen,Germany,Göttingen,yes
+Vrije Universiteit Amsterdam,Netherlands,Amsterdam,yes
+Eberhard Karls Universität Tübingen,Germany,Tübingen,yes
+Loughborough University,United Kingdom,Loughborough,yes
+University of Bern,Switzerland,Bern,yes
+Università di Padova,Italy,Padova,yes
+Eindhoven University of Technology,Netherlands,Eindhoven,yes
+Maastricht University ,Netherlands,Maastricht,yes
+University of Aberdeen,United Kingdom,Aberdeen,yes
+University of Navarra,Spain,Pamplona,
+University of Lisbon ,Portugal,Lisbon,yes
+Technische Universität Dresden,Germany,Dresden,yes
+Universite libre de Bruxelles,Belgium,Bruxelles,yes
+Norwegian University of Science And Technology,Norway,Trondheim,yes
+University of Warsaw ,Poland,Warsaw,yes
+Swansea University,United Kingdom,Swansea,yes
+Goethe-University Frankfurt am Main,Germany,Frankfurt,yes
+University of Galway,Ireland,Galway,yes
+University of Cologne,Germany,Cologne,yes
+University of Lausanne,Switzerland,Lausanne,yes
+Universitat Pompeu Fabra (Barcelona),Spain,Barcelona,yes
+Politecnico di Torino,Italy,Torino,yes
+Université Paris 1 Panthéon-Sorbonne ,France,Paris,yes
+University College Cork,Ireland,Cork,yes
+University of Bergen,Norway,Bergen,yes
+Linköping University,Sweden,Linköping,yes
+University of Sussex,United Kingdom,Sussex,yes
+Technische Universität Wien,Austria,Wien,yes
+University of Antwerp,Belgium,Antwerp,yes
+University of Porto,Portugal,Porto,yes
+University of Strathclyde,United Kingdom,Strathclyde,yes
+University of Milan,Italy,Milan,yes
+Middle East Technical University,Turkey,Ankara,yes
+Vrije Universiteit Brussel (VUB),Belgium,Brussels,yes
+Westfälische Wilhelms-Universität Münster ,Germany,Münster,yes
+Universidad Politécnica de Madrid (UPM),Spain,Madrid,yes
+University of Twente,Netherlands,Twente,yes
+Universidad Carlos III de Madrid (UC3M),Spain,Madrid,yes
+Jagiellonian University,Poland,Krakow,yes
+Radboud University ,Netherlands,Nijmegen,yes
+Friedrich-Alexander-Universität Erlangen-Nürnberg,Germany,Nürnberg,yes
+Istanbul Technical University,Turkey,Istanbul,yes
+University of Surrey,United Kingdom,Surrey,yes
+Université Grenoble Alpes,France,Grenoble,yes
+University of Leicester,United Kingdom,Leicester,yes
+Heriot-Watt University,United Kingdom,Edinburgh,yes
+Universitat Politècnica de Catalunya · BarcelonaTech (UPC),Spain,Barcelona,yes
+"City, University of London",United Kingdom,London,yes
+University of Southern Denmark (SDU),Denmark,Odense,yes
+Aalborg University,Denmark,Aalborg,yes
+Ecole des Ponts ParisTech,France,Paris,yes
+Universidade Nova de Lisboa,Portugal,Lisboa,yes
+Technical University of Darmstadt,Germany,Darmstadt,yes
+University of Turku,Finland,Turku,yes
+Universitat de Valencia,Spain,Valencia,yes
+University of Pisa,Italy,Pisa,yes
+University of Coimbra,Portugal,Coimbra,yes
+University of Turin,Italy,Turin,yes
+Università Cattolica del Sacro Cuore,Italy,Milan,
+University of Tartu,Estonia,Tartu,yes
+École Normale Supérieure de Lyon,France,Lyon,yes
+Masaryk University,Czech Republic,Brno,yes
+Universität Innsbruck,Austria,Innsbruck,yes
+University of Limerick,Ireland,Limerick,yes
+Universidad de Sevilla,Spain,Sevilla,yes
+University of Florence,Italy,Florence,yes
+National and Kapodistrian University of Athens,Greece,Athens,yes
+University of East Anglia (UEA),United Kingdom,Norwich,yes
+Universität Stuttgart,Germany,Stuttgart,yes
+University of Naples - Federico II,Italy,Naples,yes
+ University of Dundee,United Kingdom,Dundee,yes
+Dublin City University,Ireland,Dublin,yes
+Oxford Brookes University,United Kingdom,Oxford,yes
+Université Paris Cité,France,Paris,yes
+Brunel University London,United Kingdom,London,yes
+Tilburg University,Netherlands,Tilburg,yes
+University of Oulu,Finland,Oulu,yes
+Koç University,Turkey,Istanbul,
+University of Granada,Spain,Granada,yes
+Aston University,United Kingdom,Birmingham,yes
+Sciences Po ,France,Paris,yes
+Université de Strasbourg,France,Strasbourg,yes
+Aix-Marseille University,France,Marseille,yes
+Boğaziçi University,Turkey,Istanbul,yes
+Université de Liège,Belgium,Liège,yes
+Aristotle University of Thessaloniki,Greece,Thessaloniki,yes
+"University of Rome ""Tor Vergata""",Italy,Rome,yes
+IE University,Spain,Madrid,
+Johannes Gutenberg Universität Mainz,Germany,Mainz,yes
+University of Kent,United Kingdom,Kent,yes
+Leibniz University Hannover,Germany,Hannover,yes
+Universitat Ramon Llull,Spain,Barcelona,
+Tampere University,Finland,Tampere,yes
+Universitat Politècnica de València,Spain,Valencia,yes
+Universität Konstanz,Germany,Konstanz,yes
+Czech Technical University in Prague,Czech Republic,Prague,yes
+Ruhr-Universität Bochum,Germany,Bochum,yes
+Vilnius University ,Lithuania,Vilnius,yes
+National Technical University of Athens,Greece,Athens,yes
+University of Luxembourg,Luxembourg,Luxembourg,yes
+University of Bordeaux,France,Bordeaux,yes
+University of Salamanca,Spain,Salamanca,yes
+Bilkent University,Turkey,Ankara,
+Umea University,Sweden,Umea,yes
+Universität Mannheim,Germany,Mannheim,yes
+University of Trento,Italy,Trento,yes
+Sabanci University,Turkey,Istanbul,
+Nottingham Trent University,United Kingdom,Nottingham,yes
+Coventry University,United Kingdom,Coventry,yes
+Eötvös Loránd University,Hungary,Budapest,yes
+University of the Basque Country,Spain,Basque Country,yes
+Universität Potsdam,Germany,Potsdam,yes
+Manchester Metropolitan University (MMU),United Kingdom,Manchester,yes
+University of Stirling,United Kingdom,Stirling,yes
+"Essex, University of",United Kingdom,Essex,yes
+Università degli Studi di Pavia,Italy,Pavia,yes
+Hacettepe University ,Turkey,Ankara,yes
+Université de Montpellier,France,Montpellier,yes
+Universität Leipzig,Germany,Leipzig,yes
+Lappeenranta-Lahti University of Technology LUT,Finland,Lappeenranta,yes
+University of Bradford,United Kingdom,Bradford,yes
+University of Bayreuth,Germany,Bayreuth,yes
+Christian-Albrechts-University zu Kiel,Germany,Kiel,yes
+Ca' Foscari University of Venice ,Italy,Venice,yes
+University of Jyväskylä,Finland,Jyväskylä,yes
+University of Milano-Bicocca ,Italy,Milan,yes
+Warsaw University of Technology,Poland,Warsaw,yes
+Johannes Kepler University Linz,Austria,Linz,yes
+University of Eastern Finland,Finland,Eastern Finland,yes
+Graz University of Technology,Austria,Graz,yes
+Universidad de Zaragoza,Spain,Zaragoza,yes
+Northumbria University at Newcastle,United Kingdom,Newcastle,yes
+Palacký University Olomouc,Czech Republic,Olomouc,yes
+Paris Lodron University of Salzburg,Austria,Salzburg,yes
+University of Aveiro,Portugal,Aveiro,yes
+Julius-Maximilians-Universität Würzburg,Germany,Würzburg,yes
+Institut National des Sciences Appliquées de Lyon (INSA),France,Lyon,yes
+Universidade de Santiago de Compostela,Spain,Santiago de Compostela,yes
+University of Hull,United Kingdom,Hull,yes
+University of Ljubljana,Slovenia,Ljubljana,yes
+Istanbul University,Turkey,Istanbul,yes
+University of Debrecen,Hungary,Debrecen,yes
+Bangor University,United Kingdom,Bangor,yes
+Brno University of Technology,Czech Republic,Brno,yes
+SOAS University of London ,United Kingdom,London,yes
+University of Genoa,Italy,Genoa,yes
+Universität Jena,Germany,Jena,yes
+University of Szeged,Hungary,Szeged,yes
+University of Huddersfield,United Kingdom,Huddersfield,yes
+Royal Holloway University of London,United Kingdom,Holloway,yes
+Universität Bremen,Germany,Bremen,yes
+Université Paul Sabatier Toulouse III,France,Toulouse,yes
+Universidad Pontificia Comillas,Spain,Madrid,
+University of Hohenheim,Germany,Hohenheim,yes
+"Birkbeck, University of London",United Kingdom,London,yes
+"Kingston University, London",United Kingdom,London,yes
+Université de Fribourg,Switzerland,Fribourg,yes
+University of Portsmouth,United Kingdom,Portsmouth,yes
+Ulster University,United Kingdom,Belfast,yes
+University of Plymouth,United Kingdom,Plymouth,yes
+Karl-Franzens-Universitaet Graz,Austria,Graz,yes
+University of Zagreb,Croatia,Zagreb,yes
+University of the West of England,United Kingdom,Bristol,yes
+USI - Università della Svizzera italiana,Switzerland,Lugano,yes
+University of Cyprus (UCY),Cyprus,Aglandjia,yes
+Budapest University of Technology and Economics,Hungary,Budapest,yes
+University of Minho,Portugal,Braga,yes
+Hasselt University ,Belgium,Hasselt,yes
+Université de Lille,France,Lille,yes
+Université Claude Bernard Lyon 1,France,Lyon,yes
+University of Belgrade,Serbia,Belgrade,yes
+Czech University of Life Sciences in Prague,Czech Republic,Prague,yes
+Tallinn University of Technology (TalTech),Estonia,Tallinn,yes
+Martin-Luther-Universität Halle-Wittenberg,Germany,Halle,yes
+Babes-Bolyai University,Romania,Cluj,yes
+Kaunas University of Technology,Lithuania,Kaunas,yes
+"Adam Mickiewicz University, Poznań",Poland,Poznan,yes
+Justus-Liebig-University Giessen,Germany,Giessen,yes
+Riga Technical University,Latvia,Riga,yes
+Universidad de Alcalá,Spain,Alcalá de Henares,yes
+University of Greenwich,United Kingdom,Greenwich,yes
+Liverpool John Moores University,United Kingdom,Liverpool,yes
+Ankara Üniversitesi,Turkey,Ankara,yes
+Taras Shevchenko National University of Kyiv,Ukraine,Kiev,yes
+Universidade Católica Portuguesa - UCP,Portugal,Lisbon,yes
+Gazi Üniversitesi,Turkey,Ankara,yes
+"Sofia University ""St. Kliment Ohridski""",Bulgaria,Sofia,yes
+University of Latvia,Latvia,Latvia,yes
+Vytautas Magnus University,Lithuania,Zaliakalnis,yes
+Aberystwyth University,United Kingdom,Aberystwyth,yes
+Universität Duisburg-Essen,Germany,Essen,yes
+University of Bucharest,Romania,Bucharest,yes
+University of Tromsø The Arctic University of Norway,Norway,Tromsø,yes
+Université de Lorraine,France,Lorraine,yes
+Université Côte d\'Azur,France,Nice,yes
+Comenius University Bratislava,Slovakia,Bratislava,yes
+Universitat Rovira i Virgili,Spain,Tarragona,yes
+De Montfort University,United Kingdom,Leicester,yes
+University of Siena,Italy,Siena,yes
+Azerbaijan State University of Economics,Azerbaijan,Baku,yes
+"Goldsmiths, University of London",United Kingdom,London,yes
+University of Iceland,Iceland,Reykjavik,yes
+Universität Regensburg,Germany,Regensburg,yes
+Middlesex University,United Kingdom,London,yes
+University of Alicante,Spain,Alicante,yes
+University of Crete,Greece,Crete,yes
+Universidad de Valladolid,Spain,Valladolid,yes
+Maynooth University,Ireland,Maynooth,yes
+University of Vaasa,Finland,Vaasa,yes
+TU Dortmund University,Germany,Dortmunf,yes
+University Duesseldorf,Germany,Dusseldorf,yes
+Yildiz Technical University,Turkey,Istanbul,yes
+Norwegian University of Life Sciences (UMB),Norway,As,yes
+Universität des Saarlandes,Germany,Saarlandes,yes
+Technological University Dublin,Ireland,Dublin,yes
+Université de Rennes 1 (University of Rennes),France,Rennes,yes
+"University of Chemistry and Technology, Prague",Czech Republic,Prague,yes
+University Ulm,Germany,Ulm,yes
+Abo Akademi University,Finland,Turku,yes
+Bournemouth University,United Kingdom,Bournemouth,yes
